@@ -37,7 +37,7 @@ public class Word {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Word word = (Word) o;
-        return row == word.row && cols == word.cols && vertical == word.vertical && Arrays.equals(tiles, word.tiles);
+        return row == word.row && col == word.col && vertical == word.vertical && Arrays.equals(tiles, word.tiles);
     }
 
     @Override
