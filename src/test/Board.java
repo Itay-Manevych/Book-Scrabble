@@ -24,6 +24,8 @@ public class Board {
         rows = 15;
         cols = 15;
         board = new Tile[rows][cols];
+        stringHashSet = new HashSet<String>();
+        boardInstance = null;
         bonuses = new BonusType[][] {
                 { BonusType.TRIPLE_WORD_SCORE, null, null, BonusType.DOUBLE_LETTER_SCORE, null, null, null, BonusType.TRIPLE_WORD_SCORE, null, null, null, BonusType.DOUBLE_LETTER_SCORE, null, null, BonusType.TRIPLE_WORD_SCORE },
                 { null, BonusType.DOUBLE_WORD_SCORE, null, null, null, BonusType.TRIPLE_LETTER_SCORE, null, null, null, BonusType.TRIPLE_LETTER_SCORE, null, null, null, BonusType.DOUBLE_WORD_SCORE, null },
@@ -41,7 +43,6 @@ public class Board {
                 { null, BonusType.DOUBLE_WORD_SCORE, null, null, null, BonusType.TRIPLE_LETTER_SCORE, null, null, null, BonusType.TRIPLE_LETTER_SCORE, null, null, null, BonusType.DOUBLE_WORD_SCORE, null },
                 { BonusType.TRIPLE_WORD_SCORE, null, null, BonusType.DOUBLE_LETTER_SCORE, null, null, null, BonusType.TRIPLE_WORD_SCORE, null, null, null, BonusType.DOUBLE_LETTER_SCORE, null, null, BonusType.TRIPLE_WORD_SCORE }
         };
-        boardInstance = null;
     }
     
     public static Board getBoard() {
@@ -149,7 +150,7 @@ public class Board {
                 && (checkOverlappingTiles(word) || checkAdjacentTiles(word));
     }
 
-    boolean dictionaryLegal() {
+    boolean dictionaryLegal(Word word) {
         return true;
     }
     private int findStartOfWord(int row, int col, boolean isVertical) {
@@ -197,7 +198,7 @@ public class Board {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < wordLength; i++) {
             if (wordTiles[i].letter == '_') {
-                if(word.isVertical()) {
+                if (word.isVertical()) {
                     newWordTiles[i] = board[wordRow + i][wordCol];
                     sb.append(newWordTiles[i].letter);
                 } else {
@@ -222,6 +223,10 @@ public class Board {
         int end = isVertical
                 ? findEndOfWord(wordRow + index, wordCol, isVertical)
                 : findEndOfWord(wordRow, wordCol + index, isVertical);
+
+        if (start == end) {
+            return;
+        }
 
         Tile[] newWordTiles = new Tile[end - start + 1];
         StringBuilder sb = new StringBuilder();
@@ -270,7 +275,7 @@ public class Board {
 
         return score;
     }
-    private int calculateWordScore(Word word) {
+    int getScore(Word word) {
         int wordLength = word.getTiles().length;
         int wordRow = word.getRow();
         int wordCol = word.getCol();
@@ -300,11 +305,34 @@ public class Board {
 
         return score;
     }
-    int getScore(Word word) {
-        int score = 0;
+    private void placeWord(Word word) {
+        Tile[] wordTiles = word.getTiles();
+        int wordLength = wordTiles.length;
+        int wordRow = word.getRow();
+        int wordCol = word.getCol();
+        for (int i = 0; i < wordLength; i++) {
+            Tile currentTile = wordTiles[i];
+            int row = word.isVertical() ? wordRow + i : wordRow;
+            int col = word.isVertical() ? wordCol: wordCol + i;
+            if (currentTile.letter != '_') {
+                board[row][col] = currentTile;
+            }
+        }
+    }
+    int tryPlaceWord(Word word) {
+        if (!(boardLegal(word))) {
+            return 0;
+        }
         ArrayList<Word> wordsArray = getWords(word);
         for (Word w : wordsArray) {
-            score += calculateWordScore(w);
+            if (!(dictionaryLegal(w))) {
+                return 0;
+            }
+        }
+        placeWord(word);
+        int score = 0;
+        for (Word w : wordsArray) {
+            score += getScore(w);
         }
         return score;
     }
