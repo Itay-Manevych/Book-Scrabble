@@ -10,10 +10,37 @@ public class Board {
     final int cols;
     private static Board boardInstance;
     HashSet<String> stringHashSet;
+
+    private enum BonusType {
+        DOUBLE_LETTER_SCORE,
+        TRIPLE_LETTER_SCORE,
+        DOUBLE_WORD_SCORE,
+        TRIPLE_WORD_SCORE
+    }
+
+    BonusType[][] bonuses;
+
     private Board() {
         rows = 15;
         cols = 15;
         board = new Tile[rows][cols];
+        bonuses = new BonusType[][] {
+                { BonusType.TRIPLE_WORD_SCORE, null, null, BonusType.DOUBLE_LETTER_SCORE, null, null, null, BonusType.TRIPLE_WORD_SCORE, null, null, null, BonusType.DOUBLE_LETTER_SCORE, null, null, BonusType.TRIPLE_WORD_SCORE },
+                { null, BonusType.DOUBLE_WORD_SCORE, null, null, null, BonusType.TRIPLE_LETTER_SCORE, null, null, null, BonusType.TRIPLE_LETTER_SCORE, null, null, null, BonusType.DOUBLE_WORD_SCORE, null },
+                { null, null, BonusType.DOUBLE_WORD_SCORE, null, null, null, BonusType.TRIPLE_LETTER_SCORE, null, BonusType.TRIPLE_LETTER_SCORE, null, null, null, BonusType.DOUBLE_WORD_SCORE, null, null },
+                { BonusType.DOUBLE_LETTER_SCORE, null, null, BonusType.DOUBLE_WORD_SCORE, null, null, null, BonusType.DOUBLE_LETTER_SCORE, null, null, null, BonusType.DOUBLE_WORD_SCORE, null, null, BonusType.DOUBLE_LETTER_SCORE },
+                { null, null, null, null, BonusType.DOUBLE_WORD_SCORE, null, null, null, null, BonusType.DOUBLE_WORD_SCORE, null, null, null, null, null },
+                { null, BonusType.TRIPLE_LETTER_SCORE, null, null, null, BonusType.TRIPLE_LETTER_SCORE, null, null, null, BonusType.TRIPLE_LETTER_SCORE, null, null, null, BonusType.TRIPLE_LETTER_SCORE, null },
+                { null, null, BonusType.TRIPLE_LETTER_SCORE, null, null, null, BonusType.TRIPLE_LETTER_SCORE, null, BonusType.TRIPLE_LETTER_SCORE, null, null, null, BonusType.TRIPLE_LETTER_SCORE, null, null },
+                { BonusType.TRIPLE_WORD_SCORE, null, null, BonusType.DOUBLE_LETTER_SCORE, null, null, null, BonusType.DOUBLE_WORD_SCORE, null, null, null, BonusType.DOUBLE_LETTER_SCORE, null, null, BonusType.TRIPLE_WORD_SCORE },
+                { null, null, BonusType.TRIPLE_LETTER_SCORE, null, null, null, BonusType.TRIPLE_LETTER_SCORE, null, BonusType.TRIPLE_LETTER_SCORE, null, null, null, BonusType.TRIPLE_LETTER_SCORE, null, null },
+                { null, BonusType.TRIPLE_LETTER_SCORE, null, null, null, BonusType.TRIPLE_LETTER_SCORE, null, null, null, BonusType.TRIPLE_LETTER_SCORE, null, null, null, BonusType.TRIPLE_LETTER_SCORE, null },
+                { null, null, null, null, BonusType.DOUBLE_WORD_SCORE, null, null, null, null, BonusType.DOUBLE_WORD_SCORE, null, null, null, null, null },
+                { BonusType.DOUBLE_LETTER_SCORE, null, null, BonusType.DOUBLE_WORD_SCORE, null, null, null, BonusType.DOUBLE_LETTER_SCORE, null, null, null, BonusType.DOUBLE_WORD_SCORE, null, null, BonusType.DOUBLE_LETTER_SCORE },
+                { null, null, BonusType.DOUBLE_WORD_SCORE, null, null, null, BonusType.TRIPLE_LETTER_SCORE, null, BonusType.TRIPLE_LETTER_SCORE, null, null, null, BonusType.DOUBLE_WORD_SCORE, null, null },
+                { null, BonusType.DOUBLE_WORD_SCORE, null, null, null, BonusType.TRIPLE_LETTER_SCORE, null, null, null, BonusType.TRIPLE_LETTER_SCORE, null, null, null, BonusType.DOUBLE_WORD_SCORE, null },
+                { BonusType.TRIPLE_WORD_SCORE, null, null, BonusType.DOUBLE_LETTER_SCORE, null, null, null, BonusType.TRIPLE_WORD_SCORE, null, null, null, BonusType.DOUBLE_LETTER_SCORE, null, null, BonusType.TRIPLE_WORD_SCORE }
+        };
         boardInstance = null;
     }
     
@@ -227,5 +254,58 @@ public class Board {
             addCrossword(word, wordsArray, i, word.isVertical());
         }
         return wordsArray;
+    }
+    private int calculateTileScore(int row, int col) {
+        Tile currentTile = board[row][col];
+        BonusType currentBonus = bonuses[row][col];
+        int score = 0;
+
+        if (currentBonus == BonusType.DOUBLE_LETTER_SCORE) {
+            score += currentTile.score * 2;
+        } else if (currentBonus == BonusType.TRIPLE_LETTER_SCORE) {
+            score += currentTile.score * 3;
+        } else {
+            score += currentTile.score;
+        }
+
+        return score;
+    }
+    private int calculateWordScore(Word word) {
+        int wordLength = word.getTiles().length;
+        int wordRow = word.getRow();
+        int wordCol = word.getCol();
+        int score = 0;
+        boolean doubleWordMultiplierFlag = false;
+        boolean tripleWordMultiplierFlag = false;
+
+        for (int i = 0; i < wordLength; i++) {
+            int row = word.isVertical() ? wordRow + i : wordRow;
+            int col = word.isVertical() ? wordCol : wordCol + i;
+
+            BonusType currentBonus = bonuses[row][col];
+            score += calculateTileScore(row, col);
+
+            if (currentBonus == BonusType.DOUBLE_WORD_SCORE) {
+                doubleWordMultiplierFlag = true;
+            } else if (currentBonus == BonusType.TRIPLE_WORD_SCORE) {
+                tripleWordMultiplierFlag = true;
+            }
+        }
+
+        if (doubleWordMultiplierFlag) {
+            score *= 2;
+        } if (tripleWordMultiplierFlag) {
+            score *= 3;
+        }
+
+        return score;
+    }
+    int getScore(Word word) {
+        int score = 0;
+        ArrayList<Word> wordsArray = getWords(word);
+        for (Word w : wordsArray) {
+            score += calculateWordScore(w);
+        }
+        return score;
     }
 }
