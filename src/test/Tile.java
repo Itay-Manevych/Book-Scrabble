@@ -65,6 +65,10 @@ public class Tile {
         }
 
         Tile getTile(char c) {
+            if (c == '_') {
+                return new Tile('_', 0);
+            }
+
             if (!(c >= 'A' && c <= 'Z')) {
                 return null;
             }
