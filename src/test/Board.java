@@ -29,22 +29,22 @@ public class Board {
         bonuses = new BonusType[][] {
                 { BonusType.TRIPLE_WORD_SCORE, null, null, BonusType.DOUBLE_LETTER_SCORE, null, null, null, BonusType.TRIPLE_WORD_SCORE, null, null, null, BonusType.DOUBLE_LETTER_SCORE, null, null, BonusType.TRIPLE_WORD_SCORE },
                 { null, BonusType.DOUBLE_WORD_SCORE, null, null, null, BonusType.TRIPLE_LETTER_SCORE, null, null, null, BonusType.TRIPLE_LETTER_SCORE, null, null, null, BonusType.DOUBLE_WORD_SCORE, null },
-                { null, null, BonusType.DOUBLE_WORD_SCORE, null, null, null, BonusType.TRIPLE_LETTER_SCORE, null, BonusType.TRIPLE_LETTER_SCORE, null, null, null, BonusType.DOUBLE_WORD_SCORE, null, null },
+                { null, null, BonusType.DOUBLE_WORD_SCORE, null, null, null, BonusType.DOUBLE_LETTER_SCORE, null, BonusType.DOUBLE_LETTER_SCORE, null, null, null, BonusType.DOUBLE_WORD_SCORE, null, null },
                 { BonusType.DOUBLE_LETTER_SCORE, null, null, BonusType.DOUBLE_WORD_SCORE, null, null, null, BonusType.DOUBLE_LETTER_SCORE, null, null, null, BonusType.DOUBLE_WORD_SCORE, null, null, BonusType.DOUBLE_LETTER_SCORE },
-                { null, null, null, null, BonusType.DOUBLE_WORD_SCORE, null, null, null, null, BonusType.DOUBLE_WORD_SCORE, null, null, null, null, null },
+                { null, null, null, null, BonusType.DOUBLE_WORD_SCORE, null, null, null, null, null, BonusType.DOUBLE_WORD_SCORE, null, null, null, null },
                 { null, BonusType.TRIPLE_LETTER_SCORE, null, null, null, BonusType.TRIPLE_LETTER_SCORE, null, null, null, BonusType.TRIPLE_LETTER_SCORE, null, null, null, BonusType.TRIPLE_LETTER_SCORE, null },
-                { null, null, BonusType.TRIPLE_LETTER_SCORE, null, null, null, BonusType.TRIPLE_LETTER_SCORE, null, BonusType.TRIPLE_LETTER_SCORE, null, null, null, BonusType.TRIPLE_LETTER_SCORE, null, null },
+                { null, null, BonusType.DOUBLE_LETTER_SCORE, null, null, null, BonusType.DOUBLE_LETTER_SCORE, null, BonusType.DOUBLE_LETTER_SCORE, null, null, null, BonusType.DOUBLE_LETTER_SCORE, null, null },
                 { BonusType.TRIPLE_WORD_SCORE, null, null, BonusType.DOUBLE_LETTER_SCORE, null, null, null, BonusType.DOUBLE_WORD_SCORE, null, null, null, BonusType.DOUBLE_LETTER_SCORE, null, null, BonusType.TRIPLE_WORD_SCORE },
-                { null, null, BonusType.TRIPLE_LETTER_SCORE, null, null, null, BonusType.TRIPLE_LETTER_SCORE, null, BonusType.TRIPLE_LETTER_SCORE, null, null, null, BonusType.TRIPLE_LETTER_SCORE, null, null },
+                { null, null, BonusType.DOUBLE_LETTER_SCORE, null, null, null, BonusType.DOUBLE_LETTER_SCORE, null, BonusType.DOUBLE_LETTER_SCORE, null, null, null, BonusType.DOUBLE_LETTER_SCORE, null, null },
                 { null, BonusType.TRIPLE_LETTER_SCORE, null, null, null, BonusType.TRIPLE_LETTER_SCORE, null, null, null, BonusType.TRIPLE_LETTER_SCORE, null, null, null, BonusType.TRIPLE_LETTER_SCORE, null },
-                { null, null, null, null, BonusType.DOUBLE_WORD_SCORE, null, null, null, null, BonusType.DOUBLE_WORD_SCORE, null, null, null, null, null },
+                { null, null, null, null, BonusType.DOUBLE_WORD_SCORE, null, null, null, null, null, BonusType.DOUBLE_WORD_SCORE, null, null, null, null },
                 { BonusType.DOUBLE_LETTER_SCORE, null, null, BonusType.DOUBLE_WORD_SCORE, null, null, null, BonusType.DOUBLE_LETTER_SCORE, null, null, null, BonusType.DOUBLE_WORD_SCORE, null, null, BonusType.DOUBLE_LETTER_SCORE },
-                { null, null, BonusType.DOUBLE_WORD_SCORE, null, null, null, BonusType.TRIPLE_LETTER_SCORE, null, BonusType.TRIPLE_LETTER_SCORE, null, null, null, BonusType.DOUBLE_WORD_SCORE, null, null },
+                { null, null, BonusType.DOUBLE_WORD_SCORE, null, null, null, BonusType.DOUBLE_LETTER_SCORE, null, BonusType.DOUBLE_LETTER_SCORE, null, null, null, BonusType.DOUBLE_WORD_SCORE, null, null },
                 { null, BonusType.DOUBLE_WORD_SCORE, null, null, null, BonusType.TRIPLE_LETTER_SCORE, null, null, null, BonusType.TRIPLE_LETTER_SCORE, null, null, null, BonusType.DOUBLE_WORD_SCORE, null },
                 { BonusType.TRIPLE_WORD_SCORE, null, null, BonusType.DOUBLE_LETTER_SCORE, null, null, null, BonusType.TRIPLE_WORD_SCORE, null, null, null, BonusType.DOUBLE_LETTER_SCORE, null, null, BonusType.TRIPLE_WORD_SCORE }
         };
     }
-    
+
     public static Board getBoard() {
         if (boardInstance == null) {
             boardInstance = new Board();
@@ -131,13 +131,13 @@ public class Board {
         for (int i = 0; i < wordLength; i++) {
             if (word.isVertical()) {
                 if ((wordCol < cols - 1 && board[wordRow + i][wordCol + 1] != null)
-                    || (wordCol > 0 && board[wordRow + i][wordCol - 1] != null)) {
-                        return true;
+                        || (wordCol > 0 && board[wordRow + i][wordCol - 1] != null)) {
+                    return true;
                 }
             } else {
                 if ((wordRow < rows - 1 && board[wordRow + 1][wordCol + i] != null)
-                    || (wordCol < 0 && board[wordRow - 1][wordCol + i] != null)) {
-                        return true;
+                        || (wordCol < 0 && board[wordRow - 1][wordCol + i] != null)) {
+                    return true;
                 }
             }
         }
@@ -154,25 +154,26 @@ public class Board {
         return true;
     }
     private int findStartOfWord(int row, int col, boolean isVertical) {
-        int i = 0;
+        int i = 1;
         int start;
         if (isVertical) {
             start = col;
-            while (i < col && board[row][col - i] != null) {
+            while (i < cols - col && board[row][col - i] != null) {
                 start--;
                 i++;
             }
         } else {
             start = row;
-            while (i < row && board[row - i][col] != null) {
+            while (i < rows - row && board[row - i][col] != null) {
                 start--;
                 i++;
             }
         }
         return start;
     }
+
     private int findEndOfWord(int row, int col, boolean isVertical) {
-        int i = 0;
+        int i = 1;
         int end;
         if (isVertical) {
             end = col;
@@ -220,6 +221,7 @@ public class Board {
         int start = isVertical
                 ? findStartOfWord(wordRow + index, wordCol, isVertical)
                 : findStartOfWord(wordRow, wordCol + index, isVertical);
+
         int end = isVertical
                 ? findEndOfWord(wordRow + index, wordCol, isVertical)
                 : findEndOfWord(wordRow, wordCol + index, isVertical);
@@ -233,8 +235,8 @@ public class Board {
 
         for (int j = 0, startTemp = start; startTemp <= end; j++, startTemp++) {
             newWordTiles[j] = isVertical
-                    ? board[wordRow + index][startTemp]
-                    : board[startTemp][wordCol + index];
+                    ? board[wordRow + index][startTemp] == null ? word.tiles[index] : board[wordRow + index][startTemp]
+                    : board[startTemp][wordCol + index] == null ? word.tiles[index] : board[startTemp][wordCol + index];
             sb.append(newWordTiles[j].letter);
         }
 
@@ -249,7 +251,6 @@ public class Board {
             ));
         }
     }
-
     ArrayList<Word> getWords(Word word) {
         ArrayList<Word> wordsArray = new ArrayList<Word>();
         Tile[] wordTiles = word.getTiles();
@@ -263,6 +264,9 @@ public class Board {
     private int calculateTileScore(int row, int col) {
         Tile currentTile = board[row][col];
         BonusType currentBonus = bonuses[row][col];
+        if (row == rows / 2 && col == cols / 2) {
+            bonuses[row][col] = null;
+        }
         int score = 0;
 
         if (currentBonus == BonusType.DOUBLE_LETTER_SCORE) {
