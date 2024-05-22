@@ -48,8 +48,11 @@ public class LFU implements CacheReplacementPolicy {
 
     @Override
     public String remove() {
+        if (priorityQueue.isEmpty()) {
+            return null;
+        }
         Element elementToRemove = priorityQueue.poll();
-        if (elementToRemove.frequency > 1) {
+        if (elementToRemove.frequency >= 1) {
             priorityQueue.add(new Element(elementToRemove.string, elementToRemove.frequency - 1));
             hashMap.put(elementToRemove.string, elementToRemove.frequency - 1);
         } else {
