@@ -6,7 +6,7 @@ import java.io.FileReader;
 import java.io.BufferedReader;
 
 public class IOSearcher {
-    public static boolean search(String word, String... fileNames) {
+    public static boolean search(String word, String... fileNames) throws IOException{
         for (String fileName : fileNames) {
             try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
                 String line;
@@ -16,7 +16,7 @@ public class IOSearcher {
                     }
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                throw e;
             }
         }
         return false;
