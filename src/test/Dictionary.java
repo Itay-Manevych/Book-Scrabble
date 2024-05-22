@@ -59,9 +59,9 @@ public class Dictionary {
                 nonExistingWords.add(word);
                 return false;
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
+            e.printStackTrace();
             return false;
         }
-
     }
 }
