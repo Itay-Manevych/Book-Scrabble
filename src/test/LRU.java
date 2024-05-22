@@ -10,7 +10,7 @@ public class LRU implements CacheReplacementPolicy{
     }
     @Override
     public void add(String word) {
-        if (queue.size() == 0) {
+        if (queue.isEmpty()) {
             queue.add(word);
         } else {
             queue.removeIf(s -> s.equals(word));
@@ -19,6 +19,9 @@ public class LRU implements CacheReplacementPolicy{
     }
     @Override
     public String remove() {
+        if (queue.isEmpty()) {
+            return null;
+        }
         return queue.remove();
     }
 }
