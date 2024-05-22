@@ -30,7 +30,7 @@ public class Tile {
                     new Tile('J', 8), new Tile('K', 5), new Tile('L', 1), new Tile('M', 3),
                     new Tile('N', 1), new Tile('O', 1), new Tile('P', 3), new Tile('Q', 10),
                     new Tile('R', 1), new Tile('S', 1), new Tile('T', 1), new Tile('U', 1),
-                    new Tile('V', 4), new Tile('W', 8), new Tile('X', 8), new Tile('Y', 4), new Tile('Z', 10) };
+                    new Tile('V', 4), new Tile('W', 4), new Tile('X', 8), new Tile('Y', 4), new Tile('Z', 10) };
 
             random = new Random();
 
