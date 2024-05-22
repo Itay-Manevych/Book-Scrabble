@@ -6,12 +6,16 @@ import java.util.LinkedList;
 public class LRU implements CacheReplacementPolicy{
     Queue<String> queue;
     public LRU() {
-        Queue<String> queue = new LinkedList<String>();
+        queue = new LinkedList<String>();
     }
     @Override
     public void add(String word) {
-        queue.removeIf(s -> s.equals(word));
-        queue.add(word);
+        if (queue.size() == 0) {
+            queue.add(word);
+        } else {
+            queue.removeIf(s -> s.equals(word));
+            queue.add(word);
+        }
     }
     @Override
     public String remove() {
