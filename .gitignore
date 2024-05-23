@@ -28,5 +28,5 @@ bin/
 ### Mac OS ###
 .DS_Store
 
-/src/**/text1.txt
-/src/**/text2.txt
+text1.txt
+text2.txt
