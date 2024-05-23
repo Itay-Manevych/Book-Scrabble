@@ -2,6 +2,8 @@ package test;
 
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
@@ -16,30 +18,23 @@ public class MyServer {
         stop = false;
     }
 
-    private void runServer() {
+    private void runServerLogic() {
         try{
             ServerSocket server = new ServerSocket(serverPort);
             server.setSoTimeout(1000);
             while (!stop) {
                 try{
                     Socket client = server.accept();
-                    try {
-                        clientHandler.handleClient(client.getInputStream(), client.getOutputStream());
-                        client.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } catch (SocketTimeoutException e) {
-                    e.printStackTrace();
-                }
+                    clientHandler.handleClient(client.getInputStream(), client.getOutputStream());
+                    clientHandler.close();
+                    client.close();
+                } catch (SocketTimeoutException e) {}
             }
             server.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        } catch (IOException e) {}
     }
     public void start() {
-        new Thread(() -> runServer()).start();
+        new Thread(this::runServerLogic).start();
     }
 
     public void close() {
