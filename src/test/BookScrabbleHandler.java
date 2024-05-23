@@ -1,6 +1,5 @@
 package test;
 
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -20,39 +19,36 @@ public class BookScrabbleHandler implements ClientHandler {
     public void handleClient(InputStream inFromClient, OutputStream outToClient) {
         this.inFromClient = inFromClient;
         this.outToClient = outToClient;
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inFromClient))) {
-            String inputLine;
-            inputLine = reader.readLine();
+        try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inFromClient));
+            String inputLine = reader.readLine();
             char searchMethod = inputLine.charAt(0);
+
             Pattern fileNamesPattern = Pattern.compile("(s\\d+\\.txt)");
             Matcher fileNamesMatcher = fileNamesPattern.matcher(inputLine);
             ArrayList<String> files = new ArrayList<>();
             while (fileNamesMatcher.find()) {
                 files.add(fileNamesMatcher.group());
             }
+
             Pattern wordToSearchPattern = Pattern.compile("[^,]+$");
             Matcher wordToSearchMatcher = wordToSearchPattern.matcher(inputLine);
-            wordToSearchMatcher.find();
-            String wordToSearch = wordToSearchMatcher.group();
-            files.add(wordToSearch);
-            String[] args = new String[files.size()];
-            for(int i = 0; i < args.length; i++) {
-                args[i] = files.get(i);
+            if (wordToSearchMatcher.find()) {
+                String wordToSearch = wordToSearchMatcher.group();
+                files.add(wordToSearch);
             }
+
+            String[] args = files.toArray(new String[0]);
+
             boolean flag = false;
             if (searchMethod == 'Q') {
                 flag = dictionaryManager.query(args);
             } else if (searchMethod == 'C') {
                 flag = dictionaryManager.challenge(args);
             }
-            if (flag) {
-                String response = "true\n";
-                outToClient.write(response.getBytes());
-            } else {
-                String response = "false\n";
-                outToClient.write(response.getBytes());
-            }
-            this.close();
+
+            String response = flag ? "true\n" : "false\n";
+            outToClient.write(response.getBytes());
         } catch (Exception e) {
             e.printStackTrace();
         }
