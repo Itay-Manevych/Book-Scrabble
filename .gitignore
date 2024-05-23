@@ -28,5 +28,4 @@ bin/
 ### Mac OS ###
 .DS_Store
 
-text1.txt
-text2.txt
+*.txt
