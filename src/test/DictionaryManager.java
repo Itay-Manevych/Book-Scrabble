@@ -6,7 +6,7 @@ import java.util.HashMap;
 public class DictionaryManager {
     HashMap<String, test.Dictionary> map;
     private static DictionaryManager dictionaryManagerInstance;
-    public DictionaryManager() {
+    private DictionaryManager() {
         map = new HashMap<>();
         dictionaryManagerInstance = null;
     }
